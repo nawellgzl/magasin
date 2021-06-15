@@ -26,8 +26,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ProduitService produitServiceFactory(ProduitRepository repository){
-        return new ProduitService(repository);
+    public ProduitService produitServiceFactory(ProduitRepository repository, ObjectMapper mapper){
+        return new ProduitService(repository, mapper);
     }
 
     @Bean

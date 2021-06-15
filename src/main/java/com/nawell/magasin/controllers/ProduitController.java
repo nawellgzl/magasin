@@ -1,11 +1,13 @@
 package com.nawell.magasin.controllers;
 
+import com.nawell.magasin.dtos.GetProduitDTO;
 import com.nawell.magasin.models.Produit;
 import com.nawell.magasin.services.ProduitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("produits")
@@ -16,13 +18,19 @@ public class ProduitController {
     private ProduitService service;
 
     @GetMapping("")
-    public List<Produit> findAll(){
+    public List<GetProduitDTO> findAll(){
         return this.service.findAll();
     }
 
     @GetMapping("{id}")
-    public Produit findById(@PathVariable int id){
+    public GetProduitDTO findById(@PathVariable int id){
         return this.service.findById(id);
+    }
+
+    @GetMapping("/{name}")
+    public Optional<Produit> findByName(@PathVariable String name) {
+        Optional<Produit> produit = service.findByName(name);
+        return produit;
     }
 
     @PostMapping("")
