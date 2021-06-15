@@ -1,5 +1,6 @@
 package com.nawell.magasin.controllers;
 
+import com.nawell.magasin.dtos.GetClientDTO;
 import com.nawell.magasin.models.Category;
 import com.nawell.magasin.models.Client;
 import com.nawell.magasin.services.CategoryService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("clients")
@@ -18,13 +20,19 @@ public class ClientController {
     private ClientService service;
 
     @GetMapping("")
-    public List<Client> findAll(){
-        return this.service.findAll();
+    public List<GetClientDTO> findAll(){
+        return service.findAll();
     }
 
     @GetMapping("{id}")
-    public Client findById(@PathVariable int id){
-        return this.service.findById(id);
+    public GetClientDTO findById(@PathVariable int id) {
+        return service.findById(id);
+    }
+
+    @GetMapping("/{name}")
+    public Optional<Client> findByName(@PathVariable String name) {
+        Optional<Client> client = service.findByName(name);
+        return client;
     }
 
     @PostMapping("")

@@ -1,5 +1,6 @@
 package com.nawell.magasin.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nawell.magasin.repositories.CategoryRepository;
 import com.nawell.magasin.repositories.ClientRepository;
 import com.nawell.magasin.repositories.CommandeRepository;
@@ -15,8 +16,8 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceConfig {
 
     @Bean
-    public ClientService clientServiceFactory(ClientRepository repository){
-        return new ClientService(repository);
+    public ClientService clientServiceFactory(ClientRepository repository, ObjectMapper mapper){
+        return new ClientService(repository, mapper);
     }
 
     @Bean
@@ -30,7 +31,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public CategoryService categoryServiceFactory(CategoryRepository repository){
+    public CategoryService categoryServiceFactory(CategoryRepository repository, ObjectMapper mapper){
         return new CategoryService(repository);
     }
 
