@@ -21,8 +21,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public CommandeService commandeServiceFactory(CommandeRepository repository){
-        return new CommandeService(repository);
+    public CommandeService commandeServiceFactory(CommandeRepository repository, ObjectMapper mapper){
+        return new CommandeService(repository, mapper);
     }
 
     @Bean
@@ -31,7 +31,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public CategoryService categoryServiceFactory(CategoryRepository repository, ObjectMapper mapper){
+    public CategoryService categoryServiceFactory(CategoryRepository repository){
         return new CategoryService(repository);
     }
 

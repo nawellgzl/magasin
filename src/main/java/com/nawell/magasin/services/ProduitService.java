@@ -2,6 +2,8 @@ package com.nawell.magasin.services;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nawell.magasin.dtos.GetClientDTO;
+import com.nawell.magasin.dtos.GetCommandeDTO;
 import com.nawell.magasin.dtos.GetProduitDTO;
 import com.nawell.magasin.models.Produit;
 import com.nawell.magasin.repositories.ProduitRepository;
@@ -26,16 +28,17 @@ public class ProduitService {
     public List<GetProduitDTO> findAll(){
         List<Produit> produits = this.repository.findAll();
         List<GetProduitDTO> getProduitDTOS = new ArrayList<>();
-        produits.forEach(client -> {
+        produits.forEach(produit -> {
             getProduitDTOS.add(
-                    this.mapper.convertValue(client, GetProduitDTO.class)
+                    this.mapper.convertValue(produit, GetProduitDTO.class)
             );
         });
         return getProduitDTOS;
     }
 
-    public GetProduitDTO  findById(int id){
+    public GetProduitDTO findById(int id){
         return mapper.convertValue(this.repository.findById(id).get(), GetProduitDTO.class);
+
     }
 
     public Optional<Produit> findByName(String name) {

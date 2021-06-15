@@ -22,12 +22,12 @@ public class ProduitController {
         return this.service.findAll();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/id/{id}")
     public GetProduitDTO findById(@PathVariable int id){
-        return this.service.findById(id);
+        return service.findById(id);
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     public Optional<Produit> findByName(@PathVariable String name) {
         Optional<Produit> produit = service.findByName(name);
         return produit;
