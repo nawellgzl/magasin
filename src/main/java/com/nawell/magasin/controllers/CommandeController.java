@@ -16,8 +16,8 @@ public class CommandeController {
     private CommandeService service;
 
     @GetMapping("")
-    public List<Commande> findAll() {
-        return this.service.findAll();
+    public List<Commande> findAll(){
+        return service.findAll();
     }
 
     @GetMapping("{id}")

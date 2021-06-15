@@ -1,5 +1,6 @@
 package com.nawell.magasin.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nawell.magasin.repositories.CategoryRepository;
 import com.nawell.magasin.repositories.ClientRepository;
 import com.nawell.magasin.repositories.CommandeRepository;
@@ -25,8 +26,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ProduitService produitServiceFactory(ProduitRepository repository){
-        return new ProduitService(repository);
+    public ProduitService produitServiceFactory(ProduitRepository repository, ObjectMapper mapper){
+        return new ProduitService(repository, mapper);
     }
 
     @Bean
