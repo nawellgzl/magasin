@@ -1,11 +1,13 @@
 package com.nawell.magasin.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nawell.magasin.dtos.GetClientDTO;
+import com.nawell.magasin.dtos.clients.DeleteClientDTO;
+import com.nawell.magasin.dtos.clients.GetClientsDTO;
+import com.nawell.magasin.dtos.clients.PostClientDTO;
+import com.nawell.magasin.dtos.clients.UpdateClientDTO;
 import com.nawell.magasin.models.Client;
 import com.nawell.magasin.repositories.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,44 +16,35 @@ import java.util.Optional;
 public class ClientService {
 
     ClientRepository repository;
+    ModelMapper mapper;
 
-    private ObjectMapper mapper;
-
-    public ClientService(ClientRepository repository, ObjectMapper mapper){
+    public ClientService(ClientRepository repository, ModelMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
-    public List<GetClientDTO> findAll(){
+    public List<GetClientsDTO> findAll() {
         List<Client> clients = this.repository.findAll();
-        List<GetClientDTO> getClientDTOS = new ArrayList<>();
-        clients.forEach(client -> {
-            getClientDTOS.add(
-                    this.mapper.convertValue(client, GetClientDTO.class)
-            );
-        });
-        return getClientDTOS;
+        List<GetClientsDTO> clientsDTOS = new ArrayList<>();
+        clients.forEach(client -> clientsDTOS.add(mapper.map(client, GetClientsDTO.class)));
+        return clientsDTOS;
     }
 
-    public GetClientDTO findById(int id) {
-        return mapper.convertValue(this.repository.findById(id).get(), GetClientDTO.class);
+    public GetClientsDTO save(PostClientDTO postClientDTO) {
+        Client client = mapper.map(postClientDTO, Client.class);
+        return mapper.map(this.repository.save(client), GetClientsDTO.class);
     }
 
-    public Optional<Client> findByName(String name) {
-        return this.repository.findByName(name);
+    public GetClientsDTO update(UpdateClientDTO updateClientDTO) {
+        Client client = mapper.map(updateClientDTO, Client.class);
+        return mapper.map(this.repository.save(client), GetClientsDTO.class);
     }
 
-    public Client save(Client client){
-        return this.repository.save(client);
+    public GetClientsDTO findById(Long id) {
+        return mapper.map(this.repository.findById(id).get(), GetClientsDTO.class);
     }
 
-    public Client update(Client client) {
-        return this.repository.save(client);
+    public void delete(DeleteClientDTO deleteClientDTO) {
+        this.repository.delete(mapper.map(deleteClientDTO, Client.class));
     }
-
-    public void delete(int id) {
-        this.repository.deleteById(id);
-    }
-
-
 }
