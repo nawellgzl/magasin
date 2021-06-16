@@ -1,11 +1,15 @@
 package com.nawell.magasin.models;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="produit")
 public class Produit {
@@ -24,7 +28,7 @@ public class Produit {
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name= "category_id", referencedColumnName = "id")
+    @JoinColumn(name= "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
 }
