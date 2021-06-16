@@ -1,43 +1,50 @@
 package com.nawell.magasin.services;
 
-import com.nawell.magasin.models.Client;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nawell.magasin.dtos.commandes.DeleteCommandeDTO;
+import com.nawell.magasin.dtos.commandes.GetCommandesDTO;
+import com.nawell.magasin.dtos.commandes.PostCommandeDTO;
+import com.nawell.magasin.dtos.commandes.UpdateCommandeDTO;
 import com.nawell.magasin.models.Commande;
 import com.nawell.magasin.repositories.CommandeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 public class CommandeService {
 
-    private JpaRepository<Commande, Integer> repository;
+    CommandeRepository repository;
+    ModelMapper mapper;
 
-    public CommandeService(JpaRepository<Commande, Integer> repository){
+    public CommandeService(CommandeRepository repository, ModelMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    @Autowired
-    CommandeRepository commandeRepository;
-
-    public List<Commande> findAll(){
-        return this.commandeRepository.findAll();
+    public List<GetCommandesDTO> findAll() {
+        List<Commande> commandes = this.repository.findAll();
+        List<GetCommandesDTO> findCommandesDTOS = new ArrayList<>();
+        commandes.forEach(commande -> findCommandesDTOS.add(mapper.map(commande, GetCommandesDTO.class)));
+        return findCommandesDTOS;
     }
 
-    public Commande findById(int id){
-        return this.commandeRepository.findById(id).get();
+    public GetCommandesDTO save(PostCommandeDTO postCommandeDTO) {
+        Commande commande = mapper.map(postCommandeDTO, Commande.class);
+        return mapper.map(this.repository.save(commande), GetCommandesDTO.class);
     }
 
-
-    public Commande save(Commande commande){
-        return this.commandeRepository.save(commande);
+    public GetCommandesDTO update(UpdateCommandeDTO updateCommandeDTO) {
+        Commande commande = mapper.map(updateCommandeDTO, Commande.class);
+        return mapper.map(this.repository.save(commande), GetCommandesDTO.class);
     }
 
-    public Commande update(Commande commande) {
-        return this.commandeRepository.save(commande);
+    public GetCommandesDTO findById(Long id) {
+        return mapper.map(this.repository.findById(id).get(), GetCommandesDTO.class);
     }
 
-    public void delete(int id) {
-        this.commandeRepository.deleteById(id);
+    public void delete(DeleteCommandeDTO deleteCommandeDTO) {
+        this.repository.delete(mapper.map(deleteCommandeDTO, Commande.class));
     }
 }

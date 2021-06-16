@@ -2,11 +2,13 @@ package com.nawell.magasin.services;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nawell.magasin.dtos.GetProduitDTO;
+import com.nawell.magasin.dtos.produits.DeleteProduitDTO;
+import com.nawell.magasin.dtos.produits.GetProduitsDTO;
+import com.nawell.magasin.dtos.produits.PostProduitDTO;
+import com.nawell.magasin.dtos.produits.UpdateProduitDTO;
 import com.nawell.magasin.models.Produit;
 import com.nawell.magasin.repositories.ProduitRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,44 +17,35 @@ import java.util.Optional;
 public class ProduitService {
 
     ProduitRepository repository;
-    private ObjectMapper mapper;
+    ModelMapper mapper;
 
-    public ProduitService(ProduitRepository repository, ObjectMapper mapper){
+    public ProduitService(ProduitRepository repository, ModelMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
-
-    public List<GetProduitDTO> findAll(){
+    public List<GetProduitsDTO> findAll() {
         List<Produit> produits = this.repository.findAll();
-        List<GetProduitDTO> getProduitDTOS = new ArrayList<>();
-        produits.forEach(client -> {
-            getProduitDTOS.add(
-                    this.mapper.convertValue(client, GetProduitDTO.class)
-            );
-        });
-        return getProduitDTOS;
+        List<GetProduitsDTO> produitsDTOS = new ArrayList<>();
+        produits.forEach(produit -> produitsDTOS.add(mapper.map(produit, GetProduitsDTO.class)));
+        return produitsDTOS;
     }
 
-    public GetProduitDTO  findById(int id){
-        return mapper.convertValue(this.repository.findById(id).get(), GetProduitDTO.class);
+    public GetProduitsDTO save(PostProduitDTO postProduitDTO) {
+        Produit produit = mapper.map(postProduitDTO, Produit.class);
+        return mapper.map(this.repository.save(produit), GetProduitsDTO.class);
     }
 
-    public Optional<Produit> findByName(String name) {
-        return this.repository.findByName(name);
+    public GetProduitsDTO update(UpdateProduitDTO updateProduitDTO) {
+        Produit produit = mapper.map(updateProduitDTO, Produit.class);
+        return mapper.map(this.repository.save(produit), GetProduitsDTO.class);
     }
 
-
-    public Produit save(Produit produit){
-        return this.repository.save(produit);
+    public GetProduitsDTO findById(Long id) {
+        return mapper.map(this.repository.findById(id).get(), GetProduitsDTO.class);
     }
 
-    public Produit update(Produit produit) {
-        return this.repository.save(produit);
+    public void delete(DeleteProduitDTO deleteProduitDTO) {
+        this.repository.delete(mapper.map(deleteProduitDTO, Produit.class));
     }
-
-    public void delete(int id) {
-        this.repository.deleteById(id);
-    }
-
 }
