@@ -1,34 +1,27 @@
 package com.nawell.magasin.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name="produit")
 public class Produit {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name= "name")
+    private Long id;
     private String name;
-
-    @Column(name="description")
+    private Double price;
     private String description;
 
-    @Column(name= "price")
-    private Double price;
-
     @ManyToOne
-    @JoinColumn(name= "category_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties("produits")
     private Category category;
-
 }
